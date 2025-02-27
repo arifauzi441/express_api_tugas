@@ -89,12 +89,13 @@ router.patch('/update/:id', upload.single("gambar_kendaraan"), async function (r
     }
 });
 router.delete('/delete/:id', async function (req, res, next) {
-    console.log(req.params.id)
     try {
         let id = req.params.id
         let data = await Model_Kendaraan.getById(id)
-        let pathFile = path.join(__dirname, "../public/images/", data[0].gambar_kendaraan)
-        fs.unlinkSync(pathFile)
+        if(data[0].gambar_kendaraan) {
+            let pathFile = path.join(__dirname, "../public/images/", data[0].gambar_kendaraan)
+            fs.unlinkSync(pathFile)
+        }
 
         await Model_Kendaraan.delete(id)
         res.status(200).json({status: true, msg: "Success Deleted" })
